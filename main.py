@@ -59,53 +59,40 @@ def print_horario_hoy(jobs,day_of_week):
     print()
 
 def intro():
-    print("------------------------")
+    print("------------------------------------------------------")
     print(" Hey, ", get_username(), ". Let's organize the day! 🕑 ")
-    print("------------------------")
+    print("------------------------------------------------------")
     print()
-
-# def choose_option():
-#     print("Choose between options (select time) or text (enter time): ")
-#     options=["options","text"]
-#     terminal_menu = TerminalMenu(options).show()
-#     return options[terminal_menu]
 
 def check_fin(char):
     if char == 'q':
         print()
-        print("************************")
+        print("************************************************************************")
         print("Felicidades tio, ya esta todo programado. Eres un grande. Lo petas hoy")
-        print("************************")
+        print("************************************************************************")
+        print()
         sys.exit(0)
-    else: return
-
-# def choose_time_options():
-#     hours = ["07","08","09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
-#     minutes = ["05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
-#     print("Please select an hour for your event")
-#     h = TerminalMenu(hours).show()
-#     print(" HOURS: ", hours[h])
-#     print("Please select a minute for your event")
-#     m = TerminalMenu(minutes).show()
-#     print(" MINUTES: ", minutes[m])
-#     return hours[h], minutes[m]
-    
+   
 def choose_time_text(day_of_week):
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Exit']
     if day_of_week!="today": 
         print("Please select a day of the week")
         d = TerminalMenu(days).show()
         day = days[d]
+        print(" DAY: ", day)
         if day=='Exit': check_fin('q')
     else: day = None
-    hora = input("Enter an hour (HH) (q to exit): ")
+    hora = input("Enter an hour [HH] (0-23) (q to exit): ")
     check_fin(hora)
+    while not ( hora.isdigit() and int(hora)>=0 and int(hora)<24): hora = input("Please, enter an hour between 0-23: ")
     print(" HOURS: ", hora)
-    min = input("Enter an minute (MM): ")
+    min = input("Enter an minute [MM] (0-59): ")
+    while not ( min.isdigit() and int(min)>=0 and int(min)<60): min = input("Please, enter a minute between 0-60: ")
     print(" MINUTES: ", min)
-    return day,hora,min
+    return day,str(hora),str(min)
 
 def title_and_text(comment):
+    if comment == None: comment='today'
     title = input("Enter title of "+comment.upper()+" notification: ")
     print("Title: ",title)
     msg_text = input("Enter text of notification: ")
@@ -113,8 +100,8 @@ def title_and_text(comment):
     return str("\""+title.upper()+"\""), str("\""+msg_text+"\"")
 
 def notification_description(title,msg_text,hour,minute):
-    if int(hour)<10: hour = str("0"+hour)
-    if int(minute)<10: minute = str("0"+minute)
+    if int(hour)<10: hour = str("0"+str(hour))
+    if int(minute)<10: minute = str("0"+str(minute))
     print()
     print("---------------------------------")
     print("|----NOTIFICATION-DETAILS-------|")
@@ -130,8 +117,8 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     final_command = str(notification+title+" "+msg_text+beep)
 
     job = cron.new(command=final_command, comment=comment)
-    job.hour.on(hour)
-    job.minute.on(minute)
+    job.hour.on(int(hour))
+    job.minute.on(int(minute))
     if day!= None: job.dow.on(day[0:3])
 
     # Reminder
@@ -141,7 +128,7 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
         diff = 5-int(minute)
         job2.minute.on(60-diff)
         if int(hour) > 0: hour = int(hour) - 1
-    job2.hour.on(hour)
+    job2.hour.on(int(hour))
     if day!= None: job2.dow.on(day[0:3])
 
     cron.write()
