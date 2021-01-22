@@ -2,7 +2,7 @@
 
 from crontab import CronTab
 import argparse
-import subprocess, time, sys, getopt
+import subprocess, sys
 from simple_term_menu import TerminalMenu
 from datetime import date
 import calendar
@@ -49,6 +49,8 @@ def print_horario_hoy(jobs,day_of_week):
     for i in jobs:
         hora = str(i.hour)
         minuto = str(i.minute)
+        if int(hora)<10: hora = str("0"+hora)
+        if int(minuto)<10: minuto = str("0"+minuto)
         texto = re.search(pattern,i.command)
         titulo = texto.groups()[0]
         mensaje = texto.groups()[1]
@@ -58,16 +60,15 @@ def print_horario_hoy(jobs,day_of_week):
 
 def intro():
     print("------------------------")
-    print(" Hey, ", get_username(), " Let's organize the day! 🕑 ")
+    print(" Hey, ", get_username(), ". Let's organize the day! 🕑 ")
     print("------------------------")
     print()
-    time.sleep(1)
 
-def choose_option():
-    print("Choose between options (select time) or text (enter time): ")
-    options=["options","text"]
-    terminal_menu = TerminalMenu(options).show()
-    return options[terminal_menu]
+# def choose_option():
+#     print("Choose between options (select time) or text (enter time): ")
+#     options=["options","text"]
+#     terminal_menu = TerminalMenu(options).show()
+#     return options[terminal_menu]
 
 def check_fin(char):
     if char == 'q':
@@ -78,42 +79,51 @@ def check_fin(char):
         sys.exit(0)
     else: return
 
-def choose_time_options():
-    hours = ["07","08","09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
-    minutes = ["05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
-    print("Please select an hour for your event")
-    h = TerminalMenu(hours).show()
-    print(" HOURS: ", hours[h])
-    print("Please select a minute for your event")
-    m = TerminalMenu(minutes).show()
-    print(" MINUTES: ", minutes[m])
-    return hours[h], minutes[m]
+# def choose_time_options():
+#     hours = ["07","08","09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
+#     minutes = ["05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"]
+#     print("Please select an hour for your event")
+#     h = TerminalMenu(hours).show()
+#     print(" HOURS: ", hours[h])
+#     print("Please select a minute for your event")
+#     m = TerminalMenu(minutes).show()
+#     print(" MINUTES: ", minutes[m])
+#     return hours[h], minutes[m]
     
-def choose_time_text():
-    hora = input("Enter an hour (HH): ")
+def choose_time_text(day_of_week):
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Exit']
+    if day_of_week!="today": 
+        print("Please select a day of the week")
+        d = TerminalMenu(days).show()
+        day = days[d]
+        if day=='Exit': check_fin('q')
+    else: day = None
+    hora = input("Enter an hour (HH) (q to exit): ")
+    check_fin(hora)
     print(" HOURS: ", hora)
     min = input("Enter an minute (MM): ")
     print(" MINUTES: ", min)
-    return hora, min
+    return day,hora,min
 
 def title_and_text(comment):
-    title = input("Enter title of "+comment.upper()+" notification (q to exit): ")
-    check_fin(title)
+    title = input("Enter title of "+comment.upper()+" notification: ")
     print("Title: ",title)
     msg_text = input("Enter text of notification: ")
     print("Text: ",msg_text)
     return str("\""+title.upper()+"\""), str("\""+msg_text+"\"")
 
 def notification_description(title,msg_text,hour,minute):
+    if int(hour)<10: hour = str("0"+hour)
+    if int(minute)<10: minute = str("0"+minute)
     print()
-    print(" _______________________________")
+    print("---------------------------------")
     print("|----NOTIFICATION-DETAILS-------|")
     print("| Time: ",hour,":",minute,"               |")
-    print("  Message: ",title.upper(),": ",msg_text, " ")
-    print(" _______________________________")
+    print("| Message: ",title.upper(),": ",msg_text)
+    print("---------------------------------")
     print()
 
-def add_notification(cron,title,msg_text,hour,minute,comment):
+def add_notification(cron,title,msg_text,day,hour,minute,comment):
     notification = "XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send "
     beep= " && play -q ~/swiftly.mp3 -t alsa"
 
@@ -122,15 +132,22 @@ def add_notification(cron,title,msg_text,hour,minute,comment):
     job = cron.new(command=final_command, comment=comment)
     job.hour.on(hour)
     job.minute.on(minute)
+    if day!= None: job.dow.on(day[0:3])
 
     # Reminder
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
+    if int(minute)>5:job2.minute.on(int(minute)-5)
+    else:
+        diff = 5-int(minute)
+        job2.minute.on(60-diff)
+        if int(hour) > 0: hour = int(hour) - 1
     job2.hour.on(hour)
-    job2.minute.on(int(minute)-5)
+    if day!= None: job2.dow.on(day[0:3])
 
     cron.write()
     notification_description(title,msg_text,hour,minute)
     print(" STATUS: ",comment.upper()," notification added 😊 ")
+    print("--------------------------------------------------")
     print()
 
 
@@ -161,14 +178,10 @@ def main():
         if FLAG=='today': day_of_week = 'today'
         else: day_of_week = get_day_of_week()
         intro()
-        option = choose_option()
         while True:
-            title, text = title_and_text(day_of_week)
-            if option == 'options':
-                hour,min = choose_time_options()
-            else:
-                hour,min = choose_time_text()
-            add_notification(cron,title,text,hour,min,day_of_week)
+            day,hour,min = choose_time_text(day_of_week)
+            title, text = title_and_text(day)
+            add_notification(cron,title,text,day,hour,min,day_of_week)
 
     elif FLAG=='reset':
         print()
