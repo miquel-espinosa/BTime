@@ -11,7 +11,7 @@ import re
 def arguments():
     parser = argparse.ArgumentParser()
     sp = parser.add_subparsers(dest='opt')
-    for opt in ["reset", "today", "week", "edit", "fixed", "help"]:
+    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "resetall", "help"]:
         sp.add_parser(opt)
     args = parser.parse_args()
     FLAG = args.opt
@@ -19,13 +19,14 @@ def arguments():
         parser.print_help()
         print()
         print("   Please, type: `myday <option>´ where <option> can be: ")
-        print('     <empty> (if its left empty it will show your timetable for today)')
-        print('     reset   (to reset your daily tasks)')
-        print('     today   (to define your daily tasks)')
-        print('     week    (to show your timetable for the entire week)')
-        print('     edit    (to edit any task)')
-        print('     fixed   (to define your weekly tasks)')
-        print('     help    (to show this message)')
+        print('     <empty>    (if its left empty it will show your timetable for today)')
+        print('     reset      (to reset your daily tasks)')
+        print('     addtoday   (to define your daily tasks)')
+        print('     week       (to show your timetable for the entire week)')
+        print('     edit       (to edit any task)')
+        print('     addfixed   (to define your weekly tasks)')
+        print('     resetall   (to delete all your cron tasks)')
+        print('     help       (to show this message)')
         print()
         sys.exit()
     return FLAG
@@ -73,7 +74,7 @@ def check_fin(char):
         print()
         sys.exit(0)
    
-def choose_time_text(day_of_week):
+def choose_time(day_of_week):
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Exit']
     if day_of_week!="today": 
         print("Please select a day of the week")
@@ -119,7 +120,7 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     job = cron.new(command=final_command, comment=comment)
     job.hour.on(int(hour))
     job.minute.on(int(minute))
-    if day!= None: job.dow.on(day[0:3])
+    if day!= 'today': job.dow.on(day[0:3])
 
     # Reminder
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
@@ -129,7 +130,7 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
         job2.minute.on(60-diff)
         if int(hour) > 0: hour = int(hour) - 1
     job2.hour.on(int(hour))
-    if day!= None: job2.dow.on(day[0:3])
+    if day!= 'today': job2.dow.on(day[0:3])
 
     cron.write()
     notification_description(title,msg_text,hour,minute)
@@ -143,9 +144,11 @@ def show_day(cron, day_of_week, one_day):
     jobs = []
     for job in cron:
         if one_day: 
-            if (job.comment=='today' or job.comment==day_of_week): jobs.append(job)
+            if (job.comment=='today' or job.comment==day_of_week): 
+                jobs.append(job)
         else:
-            if (job.comment==day_of_week): jobs.append(job)
+            if (job.comment==day_of_week):
+                jobs.append(job)
     jobs.sort(key=lambda x:(int(str(x.hour)),int(str(x.minute))))
     print_horario_hoy(jobs,day_of_week)
 
@@ -161,21 +164,27 @@ def main():
         show_day(cron, day_of_week, one_day=True)
         
 
-    elif FLAG=='today' or FLAG=='fixed':
-        if FLAG=='today': day_of_week = 'today'
+    elif FLAG=='addtoday' or FLAG=='addfixed':
+        if FLAG=='addtoday': day_of_week = 'today'
         else: day_of_week = get_day_of_week()
         intro()
         while True:
-            day,hour,min = choose_time_text(day_of_week)
+            show_day(cron,day_of_week,one_day=True)
+            day,hour,min = choose_time(day_of_week)
             title, text = title_and_text(day)
-            add_notification(cron,title,text,day,hour,min,day_of_week)
+            if day_of_week=='today': day='today'
+            add_notification(cron,title,text,day,hour,min,day)
 
     elif FLAG=='reset':
         print()
-        print(" . . . Removing items from yesterday")
-        print()
-        
+        ans=input("Please, confirm that you want to delete all non-fixed events: (y/n)")
+        if ans!='y': sys.exit()
         cron.remove_all(comment='today')
+        cron.remove_all(comment='today reminder')
+        cron.write_to_user(user=True)
+        print()
+        print(" . . . Removing events from yesterday")
+        print()
 
     elif FLAG=='week':
         days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -183,12 +192,19 @@ def main():
             show_day(cron,i,one_day=False)
             print()
 
+    elif FLAG=='resetall':
+        print()
+        print('-------   ¡¡¡ CAUTION !!!   -------')
+        print()
+        ans=input("Please, confirm that you want to delete ALL cron tasks from your profile: (y/n)")
+        if ans!='y': sys.exit()
+        cron.remove_all()
+        cron.write_to_user(user=True)
+        print()
+        print(" . . . Removing ALL tasks")
+        print()
+
     # elif FLAG=='edit':
-
-    
-
-
-
 
 
 main()
