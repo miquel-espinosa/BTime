@@ -36,6 +36,10 @@ def get_username():
     username=subprocess.Popen('whoami', text=True, stdout=subprocess.PIPE).communicate()[0]
     return username[:-1]
 
+def get_directory():
+    path=subprocess.Popen('pwd', text=True, stdout=subprocess.PIPE).communicate()[0]
+    return path[:-1]
+
 def get_day_of_week():
     my_date = date.today()
     return calendar.day_name[my_date.weekday()]
@@ -114,7 +118,8 @@ def notification_description(title,msg_text,hour,minute):
 
 def add_notification(cron,title,msg_text,day,hour,minute,comment):
     notification = "XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send "
-    beep= " && play -q ~/swiftly.mp3 -t alsa"
+    path = get_directory()
+    beep= str(" && play -q "+path+"/swiftly.mp3 -t alsa")
 
     final_command = str(notification+title+" "+msg_text+beep)
 
