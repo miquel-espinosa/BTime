@@ -11,7 +11,7 @@ import re
 def arguments():
     parser = argparse.ArgumentParser()
     sp = parser.add_subparsers(dest='opt')
-    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "resetall", "help"]:
+    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "resetall", "show", "help"]:
         sp.add_parser(opt)
     args = parser.parse_args()
     FLAG = args.opt
@@ -26,6 +26,7 @@ def arguments():
         print('     edit       (to edit any task)')
         print('     addfixed   (to define your weekly tasks)')
         print('     resetall   (to delete all your cron tasks)')
+        print('     show       (to show BTime message)')
         print('     help       (to show this message)')
         print()
         sys.exit()
@@ -204,7 +205,28 @@ def main():
         print(" . . . Removing ALL tasks")
         print()
 
+    elif FLAG=='show':
+        print()
+        print(r"       -----------------------------------------------------")
+        print(r"                                                            ")
+        print(r"              =  =           ____ _____ _                   ")
+        print(r"           =    |   =       | __ )_   _(_)_ __ ___   ___    ")
+        print(r"          =     |    =      |  _ \ | | | | '_ ` _ \ / _ \   ")
+        print(r"          =      \   =      | |_) || | | | | | | | |  __/   ")
+        print(r"           =      \ =       |____/ |_| |_|_| |_| |_|\___|   ")
+        print(r"              =  =                                          ")
+        print(r"                                                            ")
+        print(r"                         N e v e r   b e   l a t e   🕑     ")
+        print(r"                                                            ")
+        print(r"       -----------------------------------------------------")
+        print(r"                                                            ")
+        print(r"                  Maintained by: Miquel Espinosa            ")
+        print(r"                                                            ")
+
+
+
     # elif FLAG=='edit':
 
 
 main()
+

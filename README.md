@@ -1,3 +1,3 @@
-![alt text](https://github.com/MiquelEspinosa/BTime/blob/main/btime2.png?raw=true)
+![alt text](https://github.com/MiquelEspinosa/BTime/blob/main/BTime.png?raw=true)
 # BTime
 Everyday organizer from command line, using cron.
