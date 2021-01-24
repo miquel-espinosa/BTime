@@ -78,9 +78,9 @@ def intro():
 def check_fin(char):
     if char == 'q':
         print()
-        print("************************************************************************")
-        print("Felicidades tio, ya esta todo programado. Eres un grande. Lo petas hoy")
-        print("************************************************************************")
+        print("   ************************************************************************")
+        print("    Felicidades tio, ya esta todo programado. Eres un grande. Lo petas hoy")
+        print("   ************************************************************************")
         print()
         sys.exit(0)
 
@@ -155,9 +155,11 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
 
 def show_week(cron):
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    today = get_day_of_week()
     for i in days:
         print()
-        show_day(cron,i,one_day=False)
+        if today == i: show_day(cron,i,one_day=True)
+        else: show_day(cron,i,one_day=False)
 
 def print_horario_title():
     print(r"               _   _                      _       ")
@@ -187,6 +189,17 @@ def print_logo():
     print(r"                  Maintained by: Miquel Espinosa            ")
     print(r"                                                            ")
 
+def error_msg():
+    print()
+    print()
+    print()
+    print("     Ups, error. Exiting BTime...")
+    print()
+    print("     . . . but remember . . . ")
+    print()
+    print("     N e v e r   b e   l a t e   🕑")
+    print()
+    print()
     
 def show_day(cron, day_of_week, one_day):
     jobs = []
@@ -202,7 +215,8 @@ def show_day(cron, day_of_week, one_day):
 
 
 def delete_event(cron):
-    ans = input('Type the title or message of the event: ')
+    ans = input('    Type the title or message of the event: ')
+    print()
     jobs_titles = []
     jobs = []
     jobs_reminders = []
@@ -215,11 +229,13 @@ def delete_event(cron):
             elif ('reminder' in str(job.comment)):
                 jobs_reminders.append(job)
     if not jobs_titles:
-        print("There is no event with such title or comment")
+        print("    There is no event with such title or comment ☹")
+        print()
         sys.exit()
     else:
-        msg = "Please, select the job from the following: "
+        msg = " Select the event to be deleted: "
         selected = multiple_select(msg, jobs_titles)
+        print(" EVENT DELETED: ", selected)
         index = jobs_titles.index(selected)
         cron.remove(jobs[index])
         cron.remove(jobs_reminders[index])
@@ -235,74 +251,81 @@ def add_new_event(cron, day_of_week):
 
 def main():
 
-    FLAG = arguments()
-    cron = get_cron()
+    try:
 
-    if FLAG==None:
-        day_of_week = get_day_of_week()
-        print_horario_title()
-        show_day(cron, day_of_week, one_day=True)
-        
+        FLAG = arguments()
+        cron = get_cron()
 
-    elif FLAG=='addtoday' or FLAG=='addfixed':
-        if FLAG=='addtoday': day_of_week = 'today'
-        else: day_of_week = get_day_of_week()
-        intro()
-        while True:
-            add_new_event(cron,day_of_week)
-    
+        if FLAG==None:
+            day_of_week = get_day_of_week()
+            print_horario_title()
+            show_day(cron, day_of_week, one_day=True)
+            
 
-    elif FLAG=='reset':
-        print()
-        ans=input("Please, confirm that you want to delete all non-fixed events: (y/n)")
-        if ans!='y': sys.exit()
-        cron.remove_all(comment='today')
-        cron.remove_all(comment='today reminder')
-        cron.write()
-        print()
-        print(" . . . Removing events from yesterday")
-        print()
-
-    elif FLAG=='week':
-        show_week(cron)
-
-    elif FLAG=='resetall':
-        print()
-        print('-------   ¡¡¡ CAUTION !!!   -------')
-        print()
-        ans=input("Please, confirm that you want to delete ALL cron tasks from your profile: (y/n)")
-        if ans!='y': sys.exit()
-        cron.remove_all()
-        cron.write()
-        print()
-        print(" . . . Removing ALL tasks")
-        print()
-
-    elif FLAG=='show':
-        print_logo()
-        
-    elif FLAG=='delevent':
-        print()
-        print("   --------- ¡¡¡ CAUTION !!! ---------")
-        print("    You are going to delete an event")
-        print("   -----------------------------------")
-        print()
-        delete_event(cron)
-
-    elif FLAG=='edit':
-        while True:
-            a = input('Press l to show week, e to edit, and q to exit: ')
-            if a == 'l': show_week(cron)
-            elif a == 'q': check_fin(a)
-            else:
-                delete_event(cron)
-                msg="Select if the event you modify should be weekly or for today: "
-                options=["Today", "Weekly"]
-                result = multiple_select(msg, options)
-                day_of_week='today'
-                if result == "Weekly": day_of_week=get_day_of_week()
+        elif FLAG=='addtoday' or FLAG=='addfixed':
+            if FLAG=='addtoday': day_of_week = 'today'
+            else: day_of_week = get_day_of_week()
+            intro()
+            while True:
                 add_new_event(cron,day_of_week)
+        
 
+        elif FLAG=='reset':
+            print()
+            ans=input("Please, confirm that you want to delete all non-fixed events: (y/n)")
+            if ans!='y': sys.exit()
+            cron.remove_all(comment='today')
+            cron.remove_all(comment='today reminder')
+            cron.write()
+            print()
+            print(" . . . Removing events from yesterday")
+            print()
+
+        elif FLAG=='week':
+            show_week(cron)
+
+        elif FLAG=='resetall':
+            print()
+            print('-------   ¡¡¡ CAUTION !!!   -------')
+            print()
+            ans=input("Please, confirm that you want to delete ALL cron tasks from your profile: (y/n)")
+            if ans!='y': sys.exit()
+            cron.remove_all()
+            cron.write()
+            print()
+            print(" . . . Removing ALL tasks")
+            print()
+
+        elif FLAG=='show':
+            print_logo()
+            
+        elif FLAG=='delevent':
+            print()
+            print("   --------- ¡¡¡ CAUTION !!! ---------")
+            print("    You are going to delete an event")
+            print("   -------------------------------------")
+            print()
+            delete_event(cron)
+
+        elif FLAG=='edit':
+            while True:
+                print()
+                a = input('    Press l to show week, e to edit, and q to exit: ')
+                if a == 'l': show_week(cron)
+                elif a == 'q': check_fin(a)
+                elif a == 'e':
+                    print()
+                    delete_event(cron)
+                    msg=" Select if the NEW event should be weekly or for today: "
+                    options=["Today", "Weekly"]
+                    result = multiple_select(msg, options)
+                    print()
+                    day_of_week='today'
+                    if result == "Weekly": day_of_week=get_day_of_week()
+                    add_new_event(cron,day_of_week)
+    
+    except KeyboardInterrupt:
+        error_msg()
 
 main()
 
