@@ -3,7 +3,6 @@
 # :clock4: BTime 
 *Never be late*
 
-[Under development]
 
 **BTime**, your new personal command line assistant that manages all your personal daily and weekly reminders.
 
