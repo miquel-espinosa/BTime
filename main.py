@@ -11,7 +11,7 @@ import re
 def arguments():
     parser = argparse.ArgumentParser()
     sp = parser.add_subparsers(dest='opt')
-    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "resetall", "show", "help"]:
+    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "delevent", "resetall", "show", "help"]:
         sp.add_parser(opt)
     args = parser.parse_args()
     FLAG = args.opt
@@ -25,6 +25,7 @@ def arguments():
         print('     week       (to show your timetable for the entire week)')
         print('     edit       (to edit any task)')
         print('     addfixed   (to define your weekly tasks)')
+        print('     delevent   (to delete an event)')
         print('     resetall   (to delete all your cron tasks)')
         print('     show       (to show BTime message)')
         print('     help       (to show this message)')
@@ -48,20 +49,24 @@ def get_cron():
     cron = CronTab(user=get_username())
     return cron
 
-def print_horario_hoy(jobs,day_of_week):
-    print()
-    print( " -----------TIMETABLE "+day_of_week.upper()+"-----------")
+def get_job_title_msg(job):
     pattern = r'notify-send \"(.*)\".*\"(.*)\"'
+    texto = re.search(pattern,job.command)
+    titulo = texto.groups()[0]
+    mensaje = texto.groups()[1]
+    return titulo, mensaje
+
+def print_horario_hoy(jobs,day_of_week):
+    print( "                           "+day_of_week.upper())
+    print( "    ----------------------------------------------------")
     for i in jobs:
         hora = str(i.hour)
         minuto = str(i.minute)
         if int(hora)<10: hora = str("0"+hora)
         if int(minuto)<10: minuto = str("0"+minuto)
-        texto = re.search(pattern,i.command)
-        titulo = texto.groups()[0]
-        mensaje = texto.groups()[1]
-        print("  "+hora+":"+minuto+"   "+titulo.upper()+". "+mensaje)
-    print( " --------------------------------------")
+        titulo, mensaje = get_job_title_msg(i)
+        print("     "+hora+":"+minuto+"   "+titulo.upper()+". "+mensaje)
+    print( "    ----------------------------------------------------")
     print()
 
 def intro():
@@ -78,13 +83,17 @@ def check_fin(char):
         print("************************************************************************")
         print()
         sys.exit(0)
-   
+
+def multiple_select(msg, list):
+    print(msg)
+    d = TerminalMenu(list).show()
+    return list[d]
+
 def choose_time(day_of_week):
-    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Exit']
-    if day_of_week!="today": 
-        print("Please select a day of the week")
-        d = TerminalMenu(days).show()
-        day = days[d]
+    if day_of_week!="today":
+        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Exit']
+        msg = "Please select a day of the week"
+        day = multiple_select(msg,days)
         print(" DAY: ", day)
         if day=='Exit': check_fin('q')
     else: day = None
@@ -144,6 +153,39 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     print("--------------------------------------------------")
     print()
 
+def show_week(cron):
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    for i in days:
+        print()
+        show_day(cron,i,one_day=False)
+
+def print_horario_title():
+    print(r"               _   _                      _       ")
+    print(r"              | | | | ___  _ __ __ _ _ __(_) ___  ")
+    print(r"              | |_| |/ _ \| '__/ _` | '__| |/ _ \ ")
+    print(r"              |  _  | (_) | | | (_| | |  | | (_) |")
+    print(r"              |_| |_|\___/|_|  \__,_|_|  |_|\___/ ")
+    print(r"                                                  ")
+    
+
+
+def print_logo():
+    print()
+    print(r"       -----------------------------------------------------")
+    print(r"                                                            ")
+    print(r"              =  =           ____ _____ _                   ")
+    print(r"           =    |   =       | __ )_   _(_)_ __ ___   ___    ")
+    print(r"          =     |    =      |  _ \ | | | | '_ ` _ \ / _ \   ")
+    print(r"          =      \   =      | |_) || | | | | | | | |  __/   ")
+    print(r"           =      \ =       |____/ |_| |_|_| |_| |_|\___|   ")
+    print(r"              =  =                                          ")
+    print(r"                                                            ")
+    print(r"                         N e v e r   b e   l a t e   🕑     ")
+    print(r"                                                            ")
+    print(r"       -----------------------------------------------------")
+    print(r"                                                            ")
+    print(r"                  Maintained by: Miquel Espinosa            ")
+    print(r"                                                            ")
 
     
 def show_day(cron, day_of_week, one_day):
@@ -159,6 +201,37 @@ def show_day(cron, day_of_week, one_day):
     print_horario_hoy(jobs,day_of_week)
 
 
+def delete_event(cron):
+    ans = input('Type the title or message of the event: ')
+    jobs_titles = []
+    jobs = []
+    jobs_reminders = []
+    for job in cron:
+        title, messaje = get_job_title_msg(job)
+        if ((ans.lower() in str(title.lower())) or (ans in str(messaje.lower()))):
+            if (not ('reminder' in str(job.comment))):
+                jobs_titles.append(str("("+str(job.comment)+") "+title+": "+messaje))
+                jobs.append(job)
+            elif ('reminder' in str(job.comment)):
+                jobs_reminders.append(job)
+    if not jobs_titles:
+        print("There is no event with such title or comment")
+        sys.exit()
+    else:
+        msg = "Please, select the job from the following: "
+        selected = multiple_select(msg, jobs_titles)
+        index = jobs_titles.index(selected)
+        cron.remove(jobs[index])
+        cron.remove(jobs_reminders[index])
+        cron.write()
+
+def add_new_event(cron, day_of_week):
+    if day_of_week=='today': show_day(cron,day_of_week,one_day=True)
+    day,hour,min = choose_time(day_of_week)
+    title, text = title_and_text(day)
+    if day_of_week=='today': day='today'
+    add_notification(cron,title,text,day,hour,min,day)
+
 
 def main():
 
@@ -167,6 +240,7 @@ def main():
 
     if FLAG==None:
         day_of_week = get_day_of_week()
+        print_horario_title()
         show_day(cron, day_of_week, one_day=True)
         
 
@@ -175,11 +249,8 @@ def main():
         else: day_of_week = get_day_of_week()
         intro()
         while True:
-            show_day(cron,day_of_week,one_day=True)
-            day,hour,min = choose_time(day_of_week)
-            title, text = title_and_text(day)
-            if day_of_week=='today': day='today'
-            add_notification(cron,title,text,day,hour,min,day)
+            add_new_event(cron,day_of_week)
+    
 
     elif FLAG=='reset':
         print()
@@ -187,16 +258,13 @@ def main():
         if ans!='y': sys.exit()
         cron.remove_all(comment='today')
         cron.remove_all(comment='today reminder')
-        cron.write_to_user(user=True)
+        cron.write()
         print()
         print(" . . . Removing events from yesterday")
         print()
 
     elif FLAG=='week':
-        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        for i in days:
-            show_day(cron,i,one_day=False)
-            print()
+        show_week(cron)
 
     elif FLAG=='resetall':
         print()
@@ -205,32 +273,35 @@ def main():
         ans=input("Please, confirm that you want to delete ALL cron tasks from your profile: (y/n)")
         if ans!='y': sys.exit()
         cron.remove_all()
-        cron.write_to_user(user=True)
+        cron.write()
         print()
         print(" . . . Removing ALL tasks")
         print()
 
     elif FLAG=='show':
+        print_logo()
+        
+    elif FLAG=='delevent':
         print()
-        print(r"       -----------------------------------------------------")
-        print(r"                                                            ")
-        print(r"              =  =           ____ _____ _                   ")
-        print(r"           =    |   =       | __ )_   _(_)_ __ ___   ___    ")
-        print(r"          =     |    =      |  _ \ | | | | '_ ` _ \ / _ \   ")
-        print(r"          =      \   =      | |_) || | | | | | | | |  __/   ")
-        print(r"           =      \ =       |____/ |_| |_|_| |_| |_|\___|   ")
-        print(r"              =  =                                          ")
-        print(r"                                                            ")
-        print(r"                         N e v e r   b e   l a t e   🕑     ")
-        print(r"                                                            ")
-        print(r"       -----------------------------------------------------")
-        print(r"                                                            ")
-        print(r"                  Maintained by: Miquel Espinosa            ")
-        print(r"                                                            ")
+        print("   --------- ¡¡¡ CAUTION !!! ---------")
+        print("    You are going to delete an event")
+        print("   -----------------------------------")
+        print()
+        delete_event(cron)
 
-
-
-    # elif FLAG=='edit':
+    elif FLAG=='edit':
+        while True:
+            a = input('Press l to show week, e to edit, and q to exit: ')
+            if a == 'l': show_week(cron)
+            elif a == 'q': check_fin(a)
+            else:
+                delete_event(cron)
+                msg="Select if the event you modify should be weekly or for today: "
+                options=["Today", "Weekly"]
+                result = multiple_select(msg, options)
+                day_of_week='today'
+                if result == "Weekly": day_of_week=get_day_of_week()
+                add_new_event(cron,day_of_week)
 
 
 main()
