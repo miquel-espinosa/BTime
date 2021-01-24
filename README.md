@@ -64,7 +64,8 @@ To install *BTime* in a Unix system, follow these steps:
     ```
 
 
-
+&nbsp;
+&nbsp;
 
 Leave any comments, suggestions, bugs or issues and don't hesitate to let me know any features you would like to see implemented.
 
