@@ -2,7 +2,7 @@
 
 from crontab import CronTab
 import argparse
-import subprocess, sys
+import subprocess, sys, os
 from simple_term_menu import TerminalMenu
 from datetime import date
 import calendar
@@ -38,8 +38,8 @@ def get_username():
     return username[:-1]
 
 def get_directory():
-    path=subprocess.Popen('pwd', text=True, stdout=subprocess.PIPE).communicate()[0]
-    return path[:-1]
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    return dir_path
 
 def get_day_of_week():
     my_date = date.today()
@@ -50,7 +50,7 @@ def get_cron():
     return cron
 
 def get_job_title_msg(job):
-    pattern = r'notify-send \"(.*)\".*\"(.*)\"'
+    pattern = r'\"(.*)\".*\"(.*)\"'
     texto = re.search(pattern,job.command)
     titulo = texto.groups()[0]
     mensaje = texto.groups()[1]
@@ -126,8 +126,8 @@ def notification_description(title,msg_text,hour,minute):
     print()
 
 def add_notification(cron,title,msg_text,day,hour,minute,comment):
-    notification = "XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send "
     path = get_directory()
+    notification = str("XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i "+path+"/clock.svg ")
     beep= str(" && play -q "+path+"/swiftly.mp3 -t alsa")
 
     final_command = str(notification+title+" "+msg_text+beep)

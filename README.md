@@ -10,3 +10,4 @@
 Sounds fancy, but under the hood, it's just a python script that helps you schedule and manage more efficiently your **cron** time-based Unix-like tasks. 
 
 # Installation
+First, make sure 
