@@ -1,16 +1,15 @@
 ![alt text](https://github.com/MiquelEspinosa/BTime/blob/main/BTime.png?raw=true)
 
 # :clock4: BTime 
-*Never be late*
+>*Never be late*
 
-[Under development]
 
 **BTime**, your new personal command line assistant that manages all your personal daily and weekly reminders.
 
 Sounds fancy, but under the hood, it's just a python script that helps you schedule and manage more efficiently your **cron** time-based Unix-like tasks. 
   
 
-# Installation
+## Installation
 To install *BTime* in a Unix system, follow these steps:
 
 + Make sure you have git installed.
@@ -64,7 +63,8 @@ To install *BTime* in a Unix system, follow these steps:
     ```
 
 
-
+&nbsp;
+&nbsp;
 
 Leave any comments, suggestions, bugs or issues and don't hesitate to let me know any features you would like to see implemented.
 
