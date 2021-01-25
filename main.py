@@ -140,6 +140,7 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     if day!= 'today': job.dow.on(day[0:3])
 
     # Reminder
+    final_command = str(notification+title+" "+msg_text+lower_vol+beep)
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
     if int(minute)>5:job2.minute.on(int(minute)-5)
     else:
