@@ -8,6 +8,17 @@ from datetime import date
 import calendar
 import re
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def arguments():
     parser = argparse.ArgumentParser()
     sp = parser.add_subparsers(dest='opt')
@@ -57,7 +68,7 @@ def get_job_title_msg(job):
     return titulo, mensaje
 
 def print_horario_hoy(jobs,day_of_week):
-    print( "                           "+day_of_week.upper())
+    print( bcolors.HEADER+"                           "+day_of_week.upper()+bcolors.ENDC)
     print( "    ----------------------------------------------------")
     for i in jobs:
         hora = str(i.hour)
@@ -65,7 +76,11 @@ def print_horario_hoy(jobs,day_of_week):
         if int(hora)<10: hora = str("0"+hora)
         if int(minuto)<10: minuto = str("0"+minuto)
         titulo, mensaje = get_job_title_msg(i)
-        print("     "+hora+":"+minuto+"   "+titulo.upper()+". "+mensaje)
+        if 'today' in str(i.comment):
+            print(bcolors.OKGREEN+"     "+hora+":"+minuto+"   "+titulo.upper()+". "+mensaje+bcolors.ENDC)
+        else:
+            print(bcolors.OKBLUE+"     "+hora+":"+minuto+"   "+titulo.upper()+". "+mensaje+bcolors.ENDC)
+
     print( "    ----------------------------------------------------")
     print()
 
@@ -165,32 +180,32 @@ def show_week(cron):
         else: show_day(cron,i,one_day=False)
 
 def print_horario_title():
-    print(r"               _   _                      _       ")
-    print(r"              | | | | ___  _ __ __ _ _ __(_) ___  ")
-    print(r"              | |_| |/ _ \| '__/ _` | '__| |/ _ \ ")
-    print(r"              |  _  | (_) | | | (_| | |  | | (_) |")
-    print(r"              |_| |_|\___/|_|  \__,_|_|  |_|\___/ ")
-    print(r"                                                  ")
+    print(bcolors.BOLD+ r"               _   _                      _       " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"              | | | | ___  _ __ __ _ _ __(_) ___  " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"              | |_| |/ _ \| '__/ _` | '__| |/ _ \ " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"              |  _  | (_) | | | (_| | |  | | (_) |" +bcolors.ENDC)
+    print(bcolors.BOLD+ r"              |_| |_|\___/|_|  \__,_|_|  |_|\___/ " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                  " +bcolors.ENDC)
     
 
 
 def print_logo():
     print()
-    print(r"       -----------------------------------------------------")
-    print(r"                                                            ")
-    print(r"              =  =           ____ _____ _                   ")
-    print(r"           =    |   =       | __ )_   _(_)_ __ ___   ___    ")
-    print(r"          =     |    =      |  _ \ | | | | '_ ` _ \ / _ \   ")
-    print(r"          =      \   =      | |_) || | | | | | | | |  __/   ")
-    print(r"           =      \ =       |____/ |_| |_|_| |_| |_|\___|   ")
-    print(r"              =  =                                          ")
-    print(r"                                                            ")
-    print(r"                         N e v e r   b e   l a t e   🕑     ")
-    print(r"                                                            ")
-    print(r"       -----------------------------------------------------")
-    print(r"                                                            ")
-    print(r"                  Maintained by: Miquel Espinosa            ")
-    print(r"                                                            ")
+    print(bcolors.BOLD+ r"       -----------------------------------------------------" +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                            " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"              =  =           ____ _____ _                   " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"           =    |   =       | __ )_   _(_)_ __ ___   ___    " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"          =     |    =      |  _ \ | | | | '_ ` _ \ / _ \   " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"          =      \   =      | |_) || | | | | | | | |  __/   " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"           =      \ =       |____/ |_| |_|_| |_| |_|\___|   " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"              =  =                                          " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                            " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                         N e v e r   b e   l a t e   🕑     " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                            " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"       -----------------------------------------------------" +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                            " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                  Maintained by: Miquel Espinosa            " +bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                            " +bcolors.ENDC)
 
 def error_msg():
     print()
