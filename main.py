@@ -128,9 +128,11 @@ def notification_description(title,msg_text,hour,minute):
 def add_notification(cron,title,msg_text,day,hour,minute,comment):
     path = get_directory()
     notification = str("XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i "+path+"/clock.svg ")
+    raise_vol = str(" && amixer -D pulse sset Master unmute && amixer -D pulse sset Master 15%")
     beep= str(" && play -q "+path+"/swiftly.mp3 -t alsa")
+    lower_vol = str(" && amixer -D pulse sset Master 5%")
 
-    final_command = str(notification+title+" "+msg_text+beep)
+    final_command = str(notification+title+" "+msg_text+raise_vol+beep+lower_vol)
 
     job = cron.new(command=final_command, comment=comment)
     job.hour.on(int(hour))
