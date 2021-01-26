@@ -149,18 +149,15 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     notification = str("XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i "+path+"/clock.svg ")
     beep= str(" && play -q "+path+"/swiftly.mp3 -t alsa")
 
-    final_command = str(notification+title+" "+msg_text+beep)
+    final_command = str(notification+title+" "+msg_text)
 
     job = cron.new(command=final_command, comment=comment)
     job.hour.on(int(hour))
     job.minute.on(int(minute))
     if day!= 'today': job.dow.on(day[0:3])
 
-    lower_vol = str(" && amixer -D pulse sset Master 5%")
-    unmute = str(" && amixer -D pulse sset Master unmute")
-    raise_vol = str(" && amixer -D pulse sset Master 15%")
     # Reminder
-    final_command = str(notification+title+" "+msg_text+lower_vol+beep+unmute+raise_vol)
+    final_command = str(notification+title+" "+msg_text+beep)
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
     if int(minute)>5:job2.minute.on(int(minute)-5)
     else:
