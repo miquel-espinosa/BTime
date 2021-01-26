@@ -69,7 +69,7 @@ To install *BTime* in a Unix system, follow these steps:
     ```
 
 ## Basic usage
-To see the basic 
+To see the basic options that can be run, type `btime help`:
 ```
 Please, type: `btime <option>´ where <option> can be: 
   <empty>    (if its left empty it will show your timetable for today)
