@@ -101,8 +101,12 @@ def check_fin(char):
 
 def multiple_select(msg, list):
     print(msg)
-    d = TerminalMenu(list).show()
-    return list[d]
+    try:
+        d = TerminalMenu(list).show()
+        return list[d]
+    except:
+        error_msg()
+        sys.exit()
 
 def choose_time(day_of_week):
     if day_of_week!="today":
@@ -212,7 +216,7 @@ def error_msg():
     print()
     print()
     print()
-    print("     Ups, error. Exiting BTime...")
+    print("          Exiting BTime")
     print()
     print("     . . . but remember . . . ")
     print()
