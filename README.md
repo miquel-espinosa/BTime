@@ -16,7 +16,13 @@ To install *BTime* in a Unix system, follow these steps:
     ```
     sudo apt-get install git
     ```
-    
+
+
++ Install python-crontab library:
+    ```
+    pip install python-crontab
+    ```
+
     
 + Navigate to the directory you want to install *BTime*
     ```
@@ -62,6 +68,21 @@ To install *BTime* in a Unix system, follow these steps:
     btime show
     ```
 
+## Basic usage
+To see the basic 
+```
+Please, type: `btime <option>´ where <option> can be: 
+  <empty>    (if its left empty it will show your timetable for today)
+  reset      (to reset your daily tasks)
+  addtoday   (to define your daily tasks)
+  week       (to show your timetable for the entire week)
+  edit       (to edit any task)
+  addfixed   (to define your weekly tasks)
+  delevent   (to delete an event)
+  resetall   (to delete all your cron tasks)
+  show       (to show BTime message)
+  help       (to show this message)
+```
 
 &nbsp;
 &nbsp;

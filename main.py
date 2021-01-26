@@ -29,7 +29,7 @@ def arguments():
     if FLAG == 'help':
         parser.print_help()
         print()
-        print("   Please, type: `myday <option>´ where <option> can be: ")
+        print("   Please, type: `btime <option>´ where <option> can be: ")
         print('     <empty>    (if its left empty it will show your timetable for today)')
         print('     reset      (to reset your daily tasks)')
         print('     addtoday   (to define your daily tasks)')
@@ -347,4 +347,5 @@ def main():
         error_msg()
 
 main()
+
 
