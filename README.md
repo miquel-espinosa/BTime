@@ -38,7 +38,7 @@ To install *BTime* in a Unix system, follow these steps:
 
 + Move inside *Never-be-late* directory:
     ```
-    cd Never-be-late
+    cd BTime
     ```
     
 
