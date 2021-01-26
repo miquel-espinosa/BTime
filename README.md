@@ -88,6 +88,7 @@ Please, type: `btime <option>´ where <option> can be:
 &nbsp;
 
 Leave any comments, suggestions, bugs or issues and don't hesitate to let me know any features you would like to see implemented.
+&nbsp;
 And, of course, last but not least, you can buy me a coffee. :wink: :coffee: 
 ****
 Tested on Ubuntu 18.04
