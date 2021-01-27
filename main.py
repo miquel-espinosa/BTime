@@ -156,7 +156,10 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     job.minute.on(int(minute))
     if day!= 'today': job.dow.on(day[0:3])
 
+    notification_description(title,msg_text,hour,minute)
+    
     # Reminder
+    title = str("[Reminder] "+title)
     final_command = str(notification+title+" "+msg_text)
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
     if int(minute)>5:job2.minute.on(int(minute)-5)
@@ -168,7 +171,6 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     if day!= 'today': job2.dow.on(day[0:3])
 
     cron.write()
-    notification_description(title,msg_text,hour,minute)
     print(" STATUS: ",comment.upper()," notification added 😊 ")
     print("--------------------------------------------------")
     print()
