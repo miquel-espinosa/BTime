@@ -227,7 +227,7 @@ def show_day(cron, day_of_week, one_day):
     jobs = []
     for job in cron:
         if one_day: 
-            if (job.comment=='today' or job.comment==day_of_week): 
+            if (job.comment=='today' or job.comment==get_day_of_week()): 
                 jobs.append(job)
         else:
             if (job.comment==day_of_week):
