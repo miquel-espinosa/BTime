@@ -64,7 +64,7 @@ def get_job_title_msg(job):
     pattern = r'\"(.*)\".*\"(.*)\"'
     texto = re.search(pattern,job.command)
     titulo = texto.groups()[0]
-    mensaje = texto.groups()[1]  
+    mensaje = texto.groups()[1]
     return titulo, mensaje
 
 def print_horario_hoy(jobs,day_of_week):
