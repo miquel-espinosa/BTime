@@ -1,0 +1,50 @@
+20 14 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Monday
+15 14 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Monday reminder
+20 14 * * Tue XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Tuesday
+15 14 * * Tue XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Tuesday reminder
+20 14 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Wednesday
+15 14 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Wednesday reminder
+20 14 * * Thu XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Thursday
+15 14 * * Thu XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Thursday reminder
+20 14 * * Fri XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Friday
+15 14 * * Fri XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMIDA" "a poner la mesa, men!" # Friday reminder
+50 20 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Cortar el estudio y poner la mesa, crack!" # Monday
+45 20 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Cortar el estudio y poner la mesa, crack!" # Monday reminder
+50 20 * * Tue XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Cortar el estudio y poner la mesa, crack!" # Tuesday
+45 20 * * Tue XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Cortar el estudio y poner la mesa, crack!" # Tuesday reminder
+50 20 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Stop studio y a poner la mesa, maquina!" # Wednesday
+45 20 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Stop studio y a poner la mesa, maquina!" # Wednesday reminder
+50 20 * * Thu XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "hey men, toca cenar, so come on!" # Thursday
+45 20 * * Thu XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "hey men, toca cenar, so come on!" # Thursday reminder
+50 20 * * Fri XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Poner la mesa y a cenar, men!" # Friday
+45 20 * * Fri XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Poner la mesa y a cenar, men!" # Friday reminder
+
+0 18 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "Merienda + Servicios" # Monday
+55 17 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "Merienda + Servicios" # Monday reminder
+0 18 * * Tue XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "A merendar, bro" # Tuesday
+55 17 * * Tue XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "A merendar, bro" # Tuesday reminder
+0 18 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "Eat somethin' and go for SERVICIOS" # Wednesday
+55 17 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "Eat somethin' and go for SERVICIOS" # Wednesday reminder
+0 18 * * Thu XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "We got some merienda, bro" # Thursday
+55 17 * * Thu XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "We got some merienda, bro" # Thursday reminder
+0 18 * * Fri XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "Eat somethin' bro, and go for SERVICIOS" # Friday
+55 17 * * Fri XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "MERIENDA" "Eat somethin' bro, and go for SERVICIOS" # Friday reminder
+
+
+40 18 * * Sun XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "JESUS HUERTAS" "Hablar con J" # Sunday
+35 18 * * Sun XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "JESUS HUERTAS" "Hablar con J" # Sunday reminder
+
+15 19 * * Sun XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CATECISMO" "With big Felix" # Sunday
+10 19 * * Sun XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CATECISMO" "With big Felix" # Sunday reminder
+
+15 20 * * Sun XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Poner mesa" # Sunday
+10 20 * * Sun XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "CENA" "Poner mesa" # Sunday reminder
+
+50 19 * * Sat XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMISION" "Comi comi comisiooon" # Saturday
+45 19 * * Sat XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "COMISION" "Comi comi comisiooon" # Saturday reminder
+
+30 17 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "EDU DEJUAN" "Hablar con Edu" # Monday
+25 17 * * Mon XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg [Reminder] "EDU DEJUAN" "Hablar con Edu" # Monday reminder
+
+20 20 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg "TONI DIES" "Hablar con Toni" && play -q /home/miquel/Documents/BTime/swiftly.mp3 -t alsa # Wednesday
+15 20 * * Wed XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i /home/miquel/Documents/BTime/clock.svg [Reminder] "TONI DIES" "Hablar con Toni" # Wednesday reminder
