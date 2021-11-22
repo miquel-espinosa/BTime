@@ -22,7 +22,7 @@ class bcolors:
 def arguments():
     parser = argparse.ArgumentParser()
     sp = parser.add_subparsers(dest='opt')
-    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "delevent", "resetall", "show", "help"]:
+    for opt in ["reset", "addtoday", "week", "edit", "addfixed", "delevent", "resetall", "wifioff", "wifion", "show", "help"]:
         sp.add_parser(opt)
     args = parser.parse_args()
     FLAG = args.opt
@@ -38,6 +38,8 @@ def arguments():
         print('     addfixed   (to define your weekly tasks)')
         print('     delevent   (to delete an event)')
         print('     resetall   (to delete all your cron tasks)')
+        print('     wifioff    (to disable internet connection)')
+        print('     wifion     (to enable internet connection)')
         print('     show       (to show BTime message)')
         print('     help       (to show this message)')
         print()
@@ -270,6 +272,36 @@ def add_new_event(cron, day_of_week):
     if day_of_week=='today': day='today'
     add_notification(cron,title,text,day,hour,min,day)
 
+def print_wifioff():
+    print(bcolors.BOLD+ r"                                           " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"         ====                              " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"      =======                              " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"    ==    ==                               " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"  ===    ==              ____        ____  " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"  ==     ===            |  _ \ _ __ |  _ \ " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"  ==      ===           | | | | '_ \| | | |" + bcolors.ENDC)
+    print(bcolors.BOLD+ r"  ===       ====        | |_| | | | | |_| |" + bcolors.ENDC)
+    print(bcolors.BOLD+ r"    ==          ====    |____/|_| |_|____/ " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"      ====   =====                         " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"         ======                            " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                           " + bcolors.ENDC)
+
+def print_wifion():
+    print(bcolors.BOLD+ r"                                                                         " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"             ==========                                                  " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"        ====================                                             " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"     ==========================                                          " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"   ========              ========    __        ___  __ _    ___          " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"   =====      ========      =====    \ \      / (_)/ _(_)  / _ \ _ __    " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"           ==============             \ \ /\ / /| | |_| | | | | | '_ \   " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"         ==================            \ V  V / | |  _| | | |_| | | | |  " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"          ====        ====              \_/\_/  |_|_| |_|  \___/|_| |_|  " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"                ====                                                     " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"               ======                                                    " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"                ====                                                     " + bcolors.ENDC)
+    print(bcolors.BOLD+ r"                                                                         " + bcolors.ENDC)
+
+
 
 def main():
 
@@ -317,6 +349,14 @@ def main():
             print()
             print(" . . . Removing ALL tasks")
             print()
+
+        elif FLAG=='wifioff':
+            os.system("nmcli networking off")
+            print_wifioff()
+
+        elif FLAG=='wifion':
+            os.system("nmcli networking on")
+            print_wifion()
 
         elif FLAG=='show':
             print_logo()
