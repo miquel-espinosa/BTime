@@ -96,6 +96,8 @@ Please, type: `btime <option>´ where <option> can be:
   addfixed   (to define your weekly tasks)
   delevent   (to delete an event)
   resetall   (to delete all your cron tasks)
+  wifioff    (to disable internet connection)
+  wifion     (to enable internet connection)
   show       (to show BTime message)
   help       (to show this message)
 ```
