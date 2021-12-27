@@ -1,0 +1,2 @@
+python_crontab==2.6.0
+simple_term_menu==1.4.1

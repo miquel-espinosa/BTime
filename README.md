@@ -16,13 +16,13 @@ To install *BTime* in a Unix system, follow these steps:
 
 + Make sure you have `git` installed.
     ```
-    sudo apt-get install git
+    sudo apt install git
     ```
 
 
 + Make sure you have `pip` or `pip3` installed.
     ```
-    sudo apt-get install python3-pip
+    sudo apt install python3-pip
     ```
 
 
