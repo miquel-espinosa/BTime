@@ -133,7 +133,9 @@ def title_and_text(comment):
     print("Title: ",title)
     msg_text = input("Enter text of notification: ")
     print("Text: ",msg_text)
-    return str("\""+title.upper()+"\""), str("\""+msg_text+"\"")
+    command = input("Enter text of notification: ")
+    print("Command: ",command)
+    return str("\""+title.upper()+"\""), str("\""+msg_text+"\""), command
 
 def notification_description(title,msg_text,hour,minute):
     if int(hour)<10: hour = str("0"+str(hour))
@@ -146,9 +148,9 @@ def notification_description(title,msg_text,hour,minute):
     print("---------------------------------")
     print()
 
-def add_notification(cron,title,msg_text,day,hour,minute,comment):
+def add_notification(cron,title,msg_text,cmd,day,hour,minute,comment):
     path = get_directory()
-    notification = str("XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i "+path+"/clock.svg ")
+    notification = str("XDG_RUNTIME_DIR=/run/user/$(id -u)" + cmd + " && notify-send -i "+path+"/clock.svg ")
     beep= str(" && play -q "+path+"/swiftly.mp3 -t alsa")
 
     final_command = str(notification+title+" "+msg_text+beep)
@@ -161,7 +163,6 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     notification_description(title,msg_text,hour,minute)
     
     # Reminder
-    title = str("[Reminder] "+title)
     final_command = str(notification+title+" "+msg_text)
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
     if int(minute)>5:job2.minute.on(int(minute)-5)
@@ -268,9 +269,9 @@ def delete_event(cron):
 def add_new_event(cron, day_of_week):
     if day_of_week=='today': show_day(cron,day_of_week,one_day=True)
     day,hour,min = choose_time(day_of_week)
-    title, text = title_and_text(day)
+    title, text, cmd = title_and_text(day)
     if day_of_week=='today': day='today'
-    add_notification(cron,title,text,day,hour,min,day)
+    add_notification(cron,title,text,cmd,day,hour,min,day)
 
 def print_wifioff():
     print(bcolors.BOLD+ r"                                           " + bcolors.ENDC)
@@ -384,7 +385,7 @@ def main():
                     print()
                     day_of_week='today'
                     if result == "Weekly": day_of_week=get_day_of_week()
-                    add_new_event(cron,day_of_week)
+                    abotdd_new_event(cron,day_of_week)
     
     except KeyboardInterrupt:
         error_msg()
