@@ -14,30 +14,12 @@ To install *BTime* in a Unix system, follow these steps:
 
 ### Requirements
 
-+ Make sure you have `git` installed.
++ Make sure you have `git` and `pip3` installed .
     ```
-    sudo apt install git
+    sudo apt install git python3-pip
     ```
-
-
-+ Make sure you have `pip` or `pip3` installed.
-    ```
-    sudo apt install python3-pip
-    ```
-
 
 ### Steps
-
-+ Install `python-crontab` library:
-    ```
-    pip3 install python-crontab
-    ```
-
-
-+ Install `simple-term-menu` library 
-    ```
-    pip3 install simple-term-menu
-    ```
 
 
 + Navigate to the directory you want to install *BTime*
@@ -56,28 +38,21 @@ To install *BTime* in a Unix system, follow these steps:
     ```
     cd BTime
     ```
++ Run autoinstall script (If do this don't need next steps):
+    ```
+    sudo ./install.sh
+    ```
+
++ Install `requirements` :
+    ```
+    pip3 install -r requirements.txt
+    ```
     
 
-+ Add **btime** alias to your bash profile (if you are using bash). (**Important:** Make sure you run this command inside the *Never-be-late* directory.)
++ Add **btime** symbolic link to `/usr/local/bin/btime`. (**Important:** Make sure you run this command inside the *Never-be-late* directory.)
     ```
-    echo 'alias btime="python3 '$(pwd)'/main.py"'  >> ~/.bashrc
+    sudo ln -sf $(realpath main.py) /usr/local/bin/btime
     ```
-    + If you are using zsh, run instead
-        ```
-        echo 'alias btime="python3 '$(pwd)'/main.py"' >> ~/.zshrc
-        ```
-
-
-+ Source your bash or zsh profile by running: 
- 	+ For bash
-      ```
-      source ~/.bashrc
-      ```
- 	+ For zsh
-      ```
-      source ~/.zshrc
-      ```
-
 
 + Finally, you should see a welcoming message when you run:
     ```
@@ -112,3 +87,4 @@ And, of course, last but not least, you can buy me a coffee. :wink: :coffee:
 ****
 Tested on Ubuntu 18.04
 
+Tested on Ubuntu 20.04
