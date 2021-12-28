@@ -14,9 +14,9 @@ To install *BTime* in a Unix system, follow these steps:
 
 ### Requirements
 
-+ Make sure you have `git` and `pip3` installed .
++ Make sure you have `git`, `sox` and `pip3` installed .
     ```
-    sudo apt install git python3-pip
+    sudo apt install git python3-pip sox
     ```
 
 ### Steps
