@@ -40,7 +40,7 @@ To install *BTime* in a Unix system, follow these steps:
     ```
 + Run autoinstall script (If do this don't need next steps):
     ```
-    sudo ./install.sh
+   ./install.sh
     ```
 
 + Install `requirements` :
