@@ -29,6 +29,7 @@ def arguments():
     if FLAG == 'help':
         parser.print_help()
         print()
+        print("     Hola " + os.getenv('USER'))
         print("   Please, type: `btime <option>´ where <option> can be: ")
         print('     <empty>    (if its left empty it will show your timetable for today)')
         print('     reset      (to reset your daily tasks)')
@@ -46,21 +47,14 @@ def arguments():
         sys.exit()
     return FLAG
 
-def get_username():
-    username=subprocess.Popen('whoami', text=True, stdout=subprocess.PIPE).communicate()[0]
-    return username[:-1]
-
 def get_directory():
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    return dir_path
+    return os.path.dirname(os.path.realpath(__file__))
 
 def get_day_of_week():
-    my_date = date.today()
-    return calendar.day_name[my_date.weekday()]
+    return calendar.day_name[date.today().weekday()]
 
 def get_cron():
-    cron = CronTab(user=get_username())
-    return cron
+    return CronTab(user=os.getenv('USER'))
 
 def get_job_title_msg(job):
     pattern = r'\"(.*)\".*\"(.*)\"'
@@ -88,7 +82,7 @@ def print_horario_hoy(jobs,day_of_week):
 
 def intro():
     print("------------------------------------------------------")
-    print(" Hey, ", get_username(), ". Let's organize the day! 🕑 ")
+    print(" Hey, ", os.getenv('USER'), ". Let's organize the day! 🕑 ")
     print("------------------------------------------------------")
     print()
 
