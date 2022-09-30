@@ -164,7 +164,7 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     title = str("[Reminder] "+title)
     final_command = str(notification+title+" "+msg_text)
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
-    if int(minute)>5:job2.minute.on(int(minute)-5)
+    if int(minute)>=5:job2.minute.on(int(minute)-5)
     else:
         diff = 5-int(minute)
         job2.minute.on(60-diff)
