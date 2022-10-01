@@ -29,6 +29,7 @@ def arguments():
     if FLAG == 'help':
         parser.print_help()
         print()
+        print("     Hola " + os.getenv('USER'))
         print("   Please, type: `btime <option>´ where <option> can be: ")
         print('     <empty>    (if its left empty it will show your timetable for today)')
         print('     reset      (to reset your daily tasks)')
@@ -46,21 +47,14 @@ def arguments():
         sys.exit()
     return FLAG
 
-def get_username():
-    username=subprocess.Popen('whoami', text=True, stdout=subprocess.PIPE).communicate()[0]
-    return username[:-1]
-
 def get_directory():
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    return dir_path
+    return os.path.dirname(os.path.realpath(__file__))
 
 def get_day_of_week():
-    my_date = date.today()
-    return calendar.day_name[my_date.weekday()]
+    return calendar.day_name[date.today().weekday()]
 
 def get_cron():
-    cron = CronTab(user=get_username())
-    return cron
+    return CronTab(user=os.getenv('USER'))
 
 def get_job_title_msg(job):
     pattern = r'\"(.*)\".*\"(.*)\"'
@@ -88,7 +82,7 @@ def print_horario_hoy(jobs,day_of_week):
 
 def intro():
     print("------------------------------------------------------")
-    print(" Hey, ", get_username(), ". Let's organize the day! 🕑 ")
+    print(" Hey, ", os.getenv('USER'), ". Let's organize the day! 🕑 ")
     print("------------------------------------------------------")
     print()
 
@@ -133,7 +127,9 @@ def title_and_text(comment):
     print("Title: ",title)
     msg_text = input("Enter text of notification: ")
     print("Text: ",msg_text)
-    return str("\""+title.upper()+"\""), str("\""+msg_text+"\"")
+    command = input("Enter a custom command to run (empty for no command): ")
+    print("Command: ",command)
+    return str("\""+title.upper()+"\""), str("\""+msg_text+"\""), command
 
 def notification_description(title,msg_text,hour,minute):
     if int(hour)<10: hour = str("0"+str(hour))
@@ -146,12 +142,14 @@ def notification_description(title,msg_text,hour,minute):
     print("---------------------------------")
     print()
 
-def add_notification(cron,title,msg_text,day,hour,minute,comment):
+def add_notification(cron,title,msg_text,cmd,day,hour,minute,comment):
+    cron.env['DISPLAY'] = os.getenv('DISPLAY')
+    cron.env['XAUTHORITY'] = os.getenv('XAUTHORITY')
     path = get_directory()
-    notification = str("XDG_RUNTIME_DIR=/run/user/$(id -u) notify-send -i "+path+"/clock.svg ")
-    beep= str(" && play -q "+path+"/swiftly.mp3 -t alsa")
+    notification = str("notify-send -i "+path+"/clock.svg ")
+    beep= str("; play -q "+path+"/swiftly.mp3 -t alsa; ")
 
-    final_command = str(notification+title+" "+msg_text+beep)
+    final_command = str(notification+title+" "+msg_text+beep+cmd)
 
     job = cron.new(command=final_command, comment=comment)
     job.hour.on(int(hour))
@@ -161,7 +159,6 @@ def add_notification(cron,title,msg_text,day,hour,minute,comment):
     notification_description(title,msg_text,hour,minute)
     
     # Reminder
-    title = str("[Reminder] "+title)
     final_command = str(notification+title+" "+msg_text)
     job2 = cron.new(command=final_command, comment=(comment+" reminder"))
     if int(minute)>=5:job2.minute.on(int(minute)-5)
@@ -268,9 +265,9 @@ def delete_event(cron):
 def add_new_event(cron, day_of_week):
     if day_of_week=='today': show_day(cron,day_of_week,one_day=True)
     day,hour,min = choose_time(day_of_week)
-    title, text = title_and_text(day)
+    title, text, cmd = title_and_text(day)
     if day_of_week=='today': day='today'
-    add_notification(cron,title,text,day,hour,min,day)
+    add_notification(cron,title,text,cmd,day,hour,min,day)
 
 def print_wifioff():
     print(bcolors.BOLD+ r"                                           " + bcolors.ENDC)
@@ -384,7 +381,7 @@ def main():
                     print()
                     day_of_week='today'
                     if result == "Weekly": day_of_week=get_day_of_week()
-                    add_new_event(cron,day_of_week)
+                    abotdd_new_event(cron,day_of_week)
     
     except KeyboardInterrupt:
         error_msg()
